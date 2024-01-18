@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Sony APS-C crop factor focal length to full frame calculator</title>
+
+        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+
+    <script type="text/javascript">
+        const {createApp, ref, defineModel} = Vue;
+
+        const template = `
+            <div>
+                <form>
+                    <fieldset>
+                        <legend>Sony APS-C focal length</legend>
+
+                        <input
+                            v-model="from"
+                            type="number"
+                            min="1"
+                        />
+
+                        -
+
+                        <input
+                            v-model="to"
+                            type="number"
+                            min="1"
+                        />
+                    </fieldset>
+
+                    <br/>
+
+                    <div>
+                        <button
+                            type="button"
+                            @click="handleSubmit"
+                        >
+                            Submit
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="handleReset"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                </form>
+
+                <br/>
+
+                <table
+                    v-if="cropFactorFocalLengths.length > 0"
+                    border="1"
+                >
+                    <thead>
+                        <tr>
+                            <th>APS-C focal length</th>
+                            <th>Full frame focal length</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="cropFactorFocalLength in cropFactorFocalLengths">
+                            <td>{{ cropFactorFocalLength }}</td>
+                            <td>{{ (Math.round(cropFactorFocalLength * 1.53 * 100) / 100).toFixed(1) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        const App = {
+            template,
+            setup() {
+                const from = ref(8);
+                const to = ref(90);
+
+                const cropFactorFocalLengths = ref([]);
+
+                return {
+                    from,
+                    to,
+                    cropFactorFocalLengths,
+                };
+            },
+            methods: {
+                handleSubmit() {
+                    this.cropFactorFocalLengths = [...Array(this.to - this.from + 1).keys()].map((key) => key + this.from);
+                },
+                handleReset() {
+                    this.from = 8;
+                    this.to = 90;
+                    this.cropFactorFocalLengths = [];
+                },
+            },
+        };
+
+        createApp(App).mount('#app');
+    </script>
+</html>
