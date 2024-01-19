@@ -2,54 +2,43 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Sony APS-C crop factor focal length to full frame calculator</title>
 
-        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body>
-        <div id="app"></div>
+        <div x-data="sonyCropFactorCalculator()">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>APS-C focal length</th>
+                        <th>Full frame focal length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="cropFactorFocalLength in cropFactorFocalLengths">
+                        <tr>
+                            <td x-text="cropFactorFocalLength"></td>
+                            <td x-text="(Math.round(cropFactorFocalLength * 1.53 * 100) / 100).toFixed(1)"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </body>
 
     <script type="text/javascript">
-        const {createApp, ref, defineModel} = Vue;
-
-        const template = `
-            <div>
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>APS-C focal length</th>
-                            <th>Full frame focal length</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr v-for="cropFactorFocalLength in cropFactorFocalLengths">
-                            <td>{{ cropFactorFocalLength }}</td>
-                            <td>{{ (Math.round(cropFactorFocalLength * 1.53 * 100) / 100).toFixed(1) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        `;
-
-        const App = {
-            template,
-            setup() {
-                const from = 8;
-                const to = 400;
-
-                const cropFactorFocalLengths = ref([...Array(to - from + 1).keys()].map((key) => key + from));
-
-                return {
-                    cropFactorFocalLengths,
-                };
-            },
-        };
-
-        createApp(App).mount('#app');
+        function sonyCropFactorCalculator() {
+            return {
+                init() {
+                    this.cropFactorFocalLengths = [...Array(this.to - this.from + 1).keys()].map((key) => key + this.from);
+                },
+                from: 8,
+                to: 400,
+                cropFactorFocalLengths: [],
+            };
+        }
     </script>
 </html>
