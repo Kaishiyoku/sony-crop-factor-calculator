@@ -18,50 +18,7 @@
 
         const template = `
             <div>
-                <form>
-                    <fieldset>
-                        <legend>Sony APS-C focal length</legend>
-
-                        <input
-                            v-model="from"
-                            type="number"
-                            min="1"
-                        />
-
-                        -
-
-                        <input
-                            v-model="to"
-                            type="number"
-                            min="1"
-                        />
-                    </fieldset>
-
-                    <br/>
-
-                    <div>
-                        <button
-                            type="button"
-                            @click="handleSubmit"
-                        >
-                            Submit
-                        </button>
-
-                        <button
-                            type="button"
-                            @click="handleReset"
-                        >
-                            Reset
-                        </button>
-                    </div>
-                </form>
-
-                <br/>
-
-                <table
-                    v-if="cropFactorFocalLengths.length > 0"
-                    border="1"
-                >
+                <table border="1">
                     <thead>
                         <tr>
                             <th>APS-C focal length</th>
@@ -82,26 +39,14 @@
         const App = {
             template,
             setup() {
-                const from = ref(8);
-                const to = ref(90);
+                const from = 8;
+                const to = 400;
 
-                const cropFactorFocalLengths = ref([]);
+                const cropFactorFocalLengths = ref([...Array(to - from + 1).keys()].map((key) => key + from));
 
                 return {
-                    from,
-                    to,
                     cropFactorFocalLengths,
                 };
-            },
-            methods: {
-                handleSubmit() {
-                    this.cropFactorFocalLengths = [...Array(this.to - this.from + 1).keys()].map((key) => key + this.from);
-                },
-                handleReset() {
-                    this.from = 8;
-                    this.to = 90;
-                    this.cropFactorFocalLengths = [];
-                },
             },
         };
 
